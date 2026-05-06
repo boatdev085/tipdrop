@@ -1,5 +1,8 @@
 # TipDrop Detailed Task Master List
 
+> [!IMPORTANT]
+> This task list is superseded by `issues/TASKS_MASTER_V2.md`. Use V2 as the active source of truth for new implementation work.
+
 This document is the source of truth for reviewing scope before creating individual GitHub Issues. Each task is written so a developer or AI agent can understand the expected implementation, dependency, output, and completion criteria.
 
 ## Global Rules

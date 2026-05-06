@@ -60,6 +60,20 @@ services:
       timeout: 5s
       retries: 5
 
+  minio-init:
+    image: minio/mc:latest
+    depends_on:
+      minio:
+        condition: service_healthy
+    environment:
+      S3_BUCKET: tipdrop-local
+      MINIO_ENDPOINT: http://minio:9000
+      MINIO_ROOT_USER: tipdrop
+      MINIO_ROOT_PASSWORD: tipdrop-secret
+    volumes:
+      - ./minio/create-bucket.sh:/create-bucket.sh:ro
+    entrypoint: ["/bin/sh", "/create-bucket.sh"]
+
 volumes:
   postgres_data:
   rabbitmq_data:

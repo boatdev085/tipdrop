@@ -51,7 +51,7 @@ func registerRoutes(app *fiber.App, cfg config.Config) {
 	})
 
 	app.Get("/readyz", func(c *fiber.Ctx) error {
-		missing := missingDependencyConfig(cfg)
+		missing := cfg.MissingRequired()
 		if len(missing) > 0 {
 			return c.Status(fiber.StatusServiceUnavailable).JSON(fiber.Map{
 				"ok":      false,
@@ -76,24 +76,4 @@ func registerRoutes(app *fiber.App, cfg config.Config) {
 			"error": errors.New("not found").Error(),
 		})
 	})
-}
-
-func missingDependencyConfig(cfg config.Config) []string {
-	var missing []string
-	if cfg.DatabaseURL == "" {
-		missing = append(missing, "DATABASE_URL")
-	}
-	if cfg.RedisURL == "" {
-		missing = append(missing, "REDIS_URL")
-	}
-	if cfg.RabbitMQURL == "" {
-		missing = append(missing, "RABBITMQ_URL")
-	}
-	if cfg.S3Endpoint == "" {
-		missing = append(missing, "S3_ENDPOINT")
-	}
-	if cfg.S3Bucket == "" {
-		missing = append(missing, "S3_BUCKET")
-	}
-	return missing
 }
