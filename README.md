@@ -1,6 +1,13 @@
 # TipDrop
 
-TipDrop is a Flutter-first tipping app with a Go Fiber API, PostgreSQL, Redis, RabbitMQ, S3-compatible storage, a Go background worker, and a small Next.js support web app.
+TipDrop is a Flutter-first direct PromptPay tipping app with a Go Fiber API, PostgreSQL, Redis, RabbitMQ, S3-compatible storage, a Go background worker, and a small Next.js support web app.
+
+## Core Rules
+
+- Workers receive 100% of tips.
+- The platform never holds money or implements a wallet balance.
+- The backend is the source of truth for tip state transitions.
+- Slip images must use the signed S3 upload flow.
 
 ## Repository Layout
 
@@ -18,39 +25,66 @@ TipDrop is a Flutter-first tipping app with a Go Fiber API, PostgreSQL, Redis, R
 1. Copy `.env.example` to `.env` and fill local values.
 2. Start local dependencies:
 
-```powershell
+```sh
+make docker-up
+```
+
+Equivalent command:
+
+```sh
 docker compose -f infra/docker/docker-compose.yml up -d
 ```
 
 3. Run the API once Go is installed:
 
-```powershell
+```sh
 cd services/api
 go run ./cmd/api
 ```
 
 4. Run the worker once Go is installed:
 
-```powershell
+```sh
 cd services/worker
 go run ./cmd/worker
 ```
 
-5. Run the web app:
+5. Install and run the web app:
 
-```powershell
-cd apps/web
+```sh
 npm install
-npm run dev
+npm --workspace apps/web run dev
 ```
 
 6. Generate Flutter platform folders and run the mobile app once Flutter is installed:
 
-```powershell
+```sh
 cd apps/mobile
 flutter create .
 flutter pub get
 flutter run
 ```
 
-Flutter is the core product surface. Next.js is only for public/support pages such as leaderboard, discover, public profile preview, SEO, privacy, and terms.
+## Checks
+
+Use the root `Makefile` for repeatable checks:
+
+```sh
+make test-go
+make test-web
+make build-web
+```
+
+The root itself is not a Go module, so prefer `make test-go` instead of `go test ./...` from the repository root.
+
+## Active Task Plan
+
+Use `issues/TASKS_MASTER_V2.md` as the active source of truth. The V2 plan makes Flutter the primary product surface, keeps Next.js as support pages, uses Google/Facebook OAuth for login, and reserves OTP for worker payment-profile verification.
+
+## Documentation
+
+- `docs/ARCHITECTURE.md` - system architecture and responsibility boundaries
+- `docs/AI_TASK_GUIDE.md` - required task format and AI guardrails
+- `docs/ENVIRONMENT.md` - environment variable contract
+- `docs/EVENTS.md` - RabbitMQ event envelope and event names
+- `docs/DEPLOYMENT.md` - staging and production checklist placeholder

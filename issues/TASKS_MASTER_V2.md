@@ -1,5 +1,8 @@
 # TipDrop Task Master V2
 
+> [!IMPORTANT]
+> This is the active source of truth for TipDrop implementation tasks. It replaces the previous web-heavy and OTP-login plan.
+
 ## Purpose
 
 This document is the implementation map for TipDrop V2. It replaces the earlier web-heavy and OTP-login plan with a Flutter-first product, a Go Fiber backend, and a small Next.js support site.
